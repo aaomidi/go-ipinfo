@@ -11,6 +11,7 @@ install:
   - dep ensure
 
 script:
+  - cd ipinfo
   - go test -v
 
 matrix:
