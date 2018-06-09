@@ -33,7 +33,7 @@ func testGoogleDNS(api IPInfo, t *testing.T) {
 
 	ip := net.ParseIP("8.8.8.8")
 
-	response, err := api.LookupIP(&ip)
+	response, err := api.LookupIP(ip)
 
 	if err != nil {
 		t.Log(err)

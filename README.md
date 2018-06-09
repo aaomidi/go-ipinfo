@@ -27,6 +27,6 @@ func main() {
 
     ip := net.ParseIP("8.8.8.8")
 
-    response, err := api.LookupIP(&ip) // Type IPResponse
+    response, err := api.LookupIP(ip) // Type IPResponse
 }
 ````

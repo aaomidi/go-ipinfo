@@ -27,7 +27,7 @@ func (i *IPInfo) init() {
 }
 
 // LookupIP looks up the IPResponse from an IP
-func (i *IPInfo) LookupIP(ip *net.IP) (response IPResponse, err error) {
+func (i *IPInfo) LookupIP(ip net.IP) (response IPResponse, err error) {
 	i.init()
 
 	url := ""
