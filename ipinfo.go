@@ -24,6 +24,7 @@ func (i *IPInfo) init() {
 		i.Client = http.DefaultClient
 	}
 }
+
 // LookupIP looks up the IPResponse from an IP
 func (i *IPInfo) LookupIP(ip *net.IP) (IPResponse, error) {
 	i.init()
