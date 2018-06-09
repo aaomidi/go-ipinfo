@@ -2,7 +2,6 @@ package ipinfo
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -56,7 +55,7 @@ func (i *IPInfo) LookupIP(ip *net.IP) (IPResponse, error) {
 
 	if resp.StatusCode != http.StatusOK {
 		return response,
-			errors.New(fmt.Sprintf("Received statuscode: %d", resp.StatusCode))
+			fmt.Errorf("received statuscode: %d", resp.StatusCode)
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&response)

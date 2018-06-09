@@ -18,7 +18,7 @@ type IPResponse struct {
 	Carrier  Carrier `json:"carrier"`
 }
 
-// ASN is the ASN structure
+// Asn is the ASN structure
 type Asn struct {
 	Asn    string `json:"asn"`
 	Name   string `json:"name"`
