@@ -2,7 +2,7 @@ package ipinfo
 
 import "net"
 
-// The full response structure
+// IPResponse is the full response structure
 type IPResponse struct {
 	Ip       net.IP  `json:"ip"`
 	Hostname string  `json:"hostname"`
@@ -18,7 +18,7 @@ type IPResponse struct {
 	Carrier  Carrier `json:"carrier"`
 }
 
-// The ASN structure
+// ASN is the ASN structure
 type Asn struct {
 	Asn    string `json:"asn"`
 	Name   string `json:"name"`
@@ -27,14 +27,14 @@ type Asn struct {
 	Type   string `json:"type"`
 }
 
-// The company structure
+// Company is the company structure
 type Company struct {
 	Name   string `json:"name"`
 	Domain string `json:"domain"`
 	Type   string `json:"type"`
 }
 
-// The carrier structure
+// Carrier is the carrier structure
 type Carrier struct {
 	Name string `json:"name"`
 	Mcc  string `json:"mcc"`
