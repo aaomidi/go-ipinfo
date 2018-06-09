@@ -5,4 +5,28 @@
 [![GoDoc](https://godoc.org/github.com/aaomidi/go-ipinfo?status.svg)](https://godoc.org/github.com/aaomidi/go-ipinfo)
 
 
-An unofficial golang wrapper around IPInfo.
+An unofficial GoLang wrapper around IPInfo.
+
+## Features:
+- IP Lookup
+- ASN Lookup (not in the code yet)
+
+## Installing it
+
+````bash
+go get github.com/aaomidi/go-ipinfo
+````
+
+## Using it
+
+To get information about an IP:
+
+````golang
+func main() {
+    api := IPInfo{Token: "YOUR_TOKEN"}
+
+    ip := net.ParseIP("8.8.8.8")
+
+    response, err := api.LookupIP(&ip) // Type IPResponse
+}
+````
