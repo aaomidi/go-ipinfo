@@ -3,6 +3,7 @@ package ipinfo
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
 	"net/http"
 )
@@ -26,9 +27,8 @@ func (i *IPInfo) init() {
 }
 
 // LookupIP looks up the IPResponse from an IP
-func (i *IPInfo) LookupIP(ip *net.IP) (IPResponse, error) {
+func (i *IPInfo) LookupIP(ip *net.IP) (response IPResponse, err error) {
 	i.init()
-	var response IPResponse
 
 	url := ""
 
@@ -41,15 +41,14 @@ func (i *IPInfo) LookupIP(ip *net.IP) (IPResponse, error) {
 	req, err := http.NewRequest("GET", url, nil)
 
 	if err != nil {
-		return response, err
+		return
 	}
 	req.SetBasicAuth(i.Token, "")
 
-	fmt.Println(req)
 	resp, err := i.Client.Do(req)
 
 	if err != nil {
-		return response, err
+		return
 	}
 
 	defer resp.Body.Close()
@@ -59,10 +58,16 @@ func (i *IPInfo) LookupIP(ip *net.IP) (IPResponse, error) {
 			fmt.Errorf("received statuscode: %d", resp.StatusCode)
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return response, nil
+		return
 	}
 
-	return response, nil
+	err = decode(body, &response)
+
+	return
+}
+
+func decode(data []byte, v interface{}) error {
+	return json.Unmarshal(data, v)
 }
