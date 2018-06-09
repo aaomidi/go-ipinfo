@@ -56,6 +56,8 @@ func testGoogleDNS(api IPInfo, t *testing.T) {
 
 // TestDecoder tests the decoder capability
 func TestDecoder(t *testing.T) {
+	t.Parallel()
+
 	fake := IPResponse{
 		Ip:       net.ParseIP("8.8.8.8"),
 		Hostname: "Example",
