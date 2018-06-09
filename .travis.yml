@@ -1,0 +1,18 @@
+language: go
+go:
+  - 1.8.x
+  - 1.9.x
+  - 1.10.x
+  - tip
+
+install:
+  - export PATH=$PATH:$GOPATH/bin
+  - go get github.com/golang/dep/cmd/dep
+  - dep ensure
+
+matrix:
+  allow_failures:
+    - go: tip
+
+notifications:
+  email: false
