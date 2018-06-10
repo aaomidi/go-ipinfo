@@ -14,7 +14,7 @@ func TestWithClient(t *testing.T) {
 
 }
 
-// TestWithoutClient ensures the client is being nullchecked.
+// TestWithoutClient ensures the client is being null checked.
 func TestWithoutClient(t *testing.T) {
 	t.Parallel()
 	testGoogleDNS(IPInfo{}, t)
@@ -22,9 +22,10 @@ func TestWithoutClient(t *testing.T) {
 
 // TestBaseURL ensures the BaseURL isn't being changed.
 func TestBaseURL(t *testing.T) {
+	// This test might look ridiculous...
+	// But since an update to this can break the entire program it acts as a verification prompt so they don't accidentally break everything.
 	if BaseURL != "https://ipinfo.io/%s" {
-		t.Log("BaseURL was changed without the test being changed.")
-		t.Fail()
+		t.Error("BaseURL was changed without the test being changed.")
 	}
 }
 
@@ -42,24 +43,22 @@ func testGoogleDNS(api IPInfo, t *testing.T) {
 	}
 
 	if response.Hostname != "google-public-dns-a.google.com" {
-		t.Log("Google DNS did not return correct hostname.")
-		t.Fail()
+		t.Error("Google DNS did not return correct hostname.")
 		return
 	}
 
-	if !response.Ip.Equal(ip) {
-		t.Log("Google DNS did not have the correct IP.")
-		t.Fail()
+	if !response.IP.Equal(ip) {
+		t.Error("Google DNS did not have the correct IP.")
 		return
 	}
 }
 
-// TestDecoder tests the decoder capability
+// TestDecoder tests the decoder capability.
 func TestDecoder(t *testing.T) {
 	t.Parallel()
 
 	fake := IPResponse{
-		Ip:       net.ParseIP("8.8.8.8"),
+		IP:       net.ParseIP("8.8.8.8"),
 		Hostname: "Example",
 	}
 
@@ -68,15 +67,13 @@ func TestDecoder(t *testing.T) {
 	b, _ := json.Marshal(fake)
 	decode(b, &inter)
 
-	if !inter.Ip.Equal(fake.Ip) {
-		t.Log("IP was not decoded and encoded properly.")
-		t.Fail()
+	if !inter.IP.Equal(fake.IP) {
+		t.Error("IP was not decoded and encoded properly.")
 		return
 	}
 
 	if inter.Hostname != fake.Hostname {
-		t.Log("Hostname was not decoded and encoded properly.")
-		t.Fail()
+		t.Error("Hostname was not decoded and encoded properly.")
 		return
 	}
 }
