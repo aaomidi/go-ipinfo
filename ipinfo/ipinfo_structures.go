@@ -40,3 +40,37 @@ type Carrier struct {
 	MCC  string `json:"mcc"`
 	MNC  string `json:"mnc"`
 }
+
+// ASNResponse is the full response of the ASN API call.
+type ASNResponse struct {
+	Asn       string    `json:"asn"`
+	Name      string    `json:"name"`
+	Country   string    `json:"country"`
+	Allocated string    `json:"allocated"`
+	Registry  string    `json:"registry"`
+	Domain    string    `json:"domain"`
+	NumIps    int       `json:"num_ips"`
+	Prefixes  []Prefix  `json:"prefixes"`
+	Prefixes6 []Prefix6 `json:"prefixes6"`
+}
+
+// Prefix is the IPv4 prefix of the ASN response.
+type Prefix struct {
+	Netblock string `json:"netblock"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Country  string `json:"country"`
+}
+
+// Prefix6 is the IPv6 prefix of the ASN response.
+type Prefix6 struct {
+	Netblock string `json:"netblock"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Country  string `json:"country"`
+}
+
+// ErrorResponse is the response the api returns if the response was an error.
+type ErrorResponse struct {
+	Error string `json:"error"`
+}

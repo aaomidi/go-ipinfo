@@ -26,6 +26,51 @@ func (i *IPInfo) init() {
 	}
 }
 
+func (i *IPInfo) LookupASN(asn string) (*ASNResponse, error) {
+	i.init()
+
+	url := ""
+	if asn == "" {
+		return nil, fmt.Errorf("asn can not be null")
+	}
+
+	url = fmt.Sprintf(BaseURL, fmt.Sprintf("%s/json", asn))
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.SetBasicAuth(i.Token, "")
+
+	resp, err := i.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		if resp.StatusCode == http.StatusTooManyRequests {
+			return nil, NewRateLimitedError()
+		}
+		return nil, fmt.Errorf("received statuscode: %d", resp.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	errResponse := ErrorResponse{}
+	response := ASNResponse{}
+	err = decode(body, &errResponse)
+
+	if err == nil && errResponse.Error != "" {
+		return nil, NewErrorResponseError(&errResponse)
+	}
+
+	return &response, nil
+}
+
 // LookupIP looks up the IPResponse from an IP.
 func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 	i.init()
@@ -53,6 +98,9 @@ func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
+		if resp.StatusCode == http.StatusTooManyRequests {
+			return nil, NewRateLimitedError()
+		}
 		return nil, fmt.Errorf("received statuscode: %d", resp.StatusCode)
 	}
 
@@ -61,7 +109,14 @@ func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 		return nil, err
 	}
 
+	errResponse := ErrorResponse{}
 	response := IPResponse{}
+	err = decode(body, &errResponse)
+
+	if err == nil && errResponse.Error != "" {
+		return nil, NewErrorResponseError(&errResponse)
+	}
+
 	err = decode(body, &response)
 	if err != nil {
 		return nil, err
