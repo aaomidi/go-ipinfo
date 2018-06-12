@@ -37,8 +37,7 @@ func testGoogleDNS(api IPInfo, t *testing.T) {
 	response, err := api.LookupIP(ip)
 
 	if err != nil {
-		t.Log(err)
-		t.Fail()
+		t.Error(err)
 		return
 	}
 
