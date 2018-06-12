@@ -61,11 +61,16 @@ func (i *IPInfo) LookupASN(asn string) (*ASNResponse, error) {
 	}
 
 	errResponse := ErrorResponse{}
-	response := ASNResponse{}
 	err = decode(body, &errResponse)
 
 	if err == nil && errResponse.Error != "" {
 		return nil, NewErrorResponseError(&errResponse)
+	}
+
+	response := ASNResponse{}
+	err = decode(body, &response)
+	if err != nil {
+		return nil, err
 	}
 
 	return &response, nil
@@ -110,13 +115,13 @@ func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 	}
 
 	errResponse := ErrorResponse{}
-	response := IPResponse{}
 	err = decode(body, &errResponse)
 
 	if err == nil && errResponse.Error != "" {
 		return nil, NewErrorResponseError(&errResponse)
 	}
 
+	response := IPResponse{}
 	err = decode(body, &response)
 	if err != nil {
 		return nil, err
