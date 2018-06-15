@@ -76,3 +76,15 @@ func TestDecoder(t *testing.T) {
 		return
 	}
 }
+
+// TestGetCountry tests the GetCountry method of the API wrapper.
+func TestGetCountry(t *testing.T) {
+	t.Parallel()
+	ip := IPInfo{}
+
+	country, _ := ip.GetCountry("US")
+
+	if country != "United States" {
+		t.Error("Country name was invalid.")
+	}
+}
