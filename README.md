@@ -9,7 +9,7 @@ An unofficial GoLang wrapper around IPInfo.
 
 ## Features:
 - IP Lookup
-- ASN Lookup (not in the code yet)
+- ASN Lookup
 
 ## Installing it
 
