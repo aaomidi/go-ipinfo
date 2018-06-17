@@ -26,7 +26,7 @@ type IPInfo struct {
 
 	Cache *cache.Cache
 
-	lang       map[string]string
+	Lang       map[string]string
 	langFailed bool
 }
 
@@ -55,8 +55,8 @@ func (i *IPInfo) init() {
 	}
 
 	// Sets up the conversion map
-	if i.lang == nil && i.LanguageReader != nil && !i.langFailed {
-		i.lang = make(map[string]string)
+	if i.Lang == nil && i.LanguageReader != nil && !i.langFailed {
+		i.Lang = make(map[string]string)
 
 		langFile, err := ioutil.ReadAll(*i.LanguageReader)
 		if err != nil {
@@ -65,7 +65,7 @@ func (i *IPInfo) init() {
 			return
 		}
 
-		err = decode(langFile, &i.lang)
+		err = decode(langFile, &i.Lang)
 		if err != nil {
 			fmt.Println(err)
 			i.langFailed = true
@@ -73,6 +73,7 @@ func (i *IPInfo) init() {
 	}
 }
 
+// LookupASN calls the ASN lookup feature of the wrapper
 func (i *IPInfo) LookupASN(asn string) (*ASNResponse, error) {
 	i.init()
 
@@ -199,7 +200,7 @@ func (i *IPInfo) GetCountry(code string) (string, error) {
 		return "", fmt.Errorf("country code file failed to load - check logs")
 	}
 
-	data, ok := i.lang[code]
+	data, ok := i.Lang[code]
 	if !ok {
 		return "", NewNoSuchCountryError(code)
 	}

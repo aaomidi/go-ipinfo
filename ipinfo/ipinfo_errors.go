@@ -2,7 +2,7 @@ package ipinfo
 
 import "fmt"
 
-// RateLimitError is the error used when the API has reached a rate limit.
+// RateLimitedError is the error used when the API has reached a rate limit.
 type RateLimitedError struct {
 	Message string
 }
