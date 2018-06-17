@@ -88,3 +88,33 @@ func TestGetCountry(t *testing.T) {
 		t.Error("Country name was invalid.")
 	}
 }
+
+func TestBotDetection(t *testing.T) {
+	t.Parallel()
+
+	req, _ := http.NewRequest("GET", "", nil)
+	req.Header.Set("user-agent", "spider")
+
+	if !IsBot(req) {
+		t.Error("User-Agent was a bot user-agent./1")
+	}
+
+	req.Header.Set("user-agent", "something something BoT something")
+
+	if !IsBot(req) {
+		t.Error("User-Agent was a bot user-agent./2")
+	}
+
+	req.Header.Set("user-agent", "something something SPiDer something")
+
+	if !IsBot(req) {
+		t.Error("User-Agent was a bot user-agent./3")
+	}
+
+	req.Header.Set("user-agent", "something something hello something")
+
+	if IsBot(req) {
+		t.Error("User-Agent was not bot user-agent./4")
+	}
+
+}

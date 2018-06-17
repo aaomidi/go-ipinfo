@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/patrickmn/go-cache"
 )
 
 const (
@@ -22,8 +24,9 @@ type IPInfo struct {
 	Client         *http.Client
 	LanguageReader *io.Reader
 
-	lang map[string]string
+	Cache *cache.Cache
 
+	lang       map[string]string
 	langFailed bool
 }
 
@@ -33,6 +36,10 @@ func (i *IPInfo) init() {
 	if i.Client == nil {
 		i.Client = http.DefaultClient
 		i.Client.Timeout = 5 * time.Second
+	}
+
+	if i.Cache == nil {
+		i.Cache = cache.New(1*time.Minute, 10*time.Minute)
 	}
 
 	// Sets up the language reader
@@ -69,6 +76,11 @@ func (i *IPInfo) init() {
 func (i *IPInfo) LookupASN(asn string) (*ASNResponse, error) {
 	i.init()
 
+	if resp, ok := i.Cache.Get(fmt.Sprintf("ASN-%s", asn)); ok {
+		result := resp.(*ASNResponse)
+		return result, nil
+	}
+
 	url := ""
 	if asn == "" {
 		return nil, fmt.Errorf("asn can not be null")
@@ -79,7 +91,8 @@ func (i *IPInfo) LookupASN(asn string) (*ASNResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.SetBasicAuth(i.Token, "")
+
+	i.prepareRequest(req)
 
 	resp, err := i.Client.Do(req)
 	if err != nil {
@@ -113,12 +126,19 @@ func (i *IPInfo) LookupASN(asn string) (*ASNResponse, error) {
 		return nil, err
 	}
 
+	i.Cache.Set(fmt.Sprintf("ASN-%s", asn), &response, cache.DefaultExpiration)
+
 	return &response, nil
 }
 
 // LookupIP looks up the IPResponse from an IP.
 func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 	i.init()
+
+	if resp, ok := i.Cache.Get(fmt.Sprintf("IP-%s", ip.String())); ok {
+		result := resp.(*IPResponse)
+		return result, nil
+	}
 
 	url := ""
 
@@ -133,7 +153,7 @@ func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 		return nil, err
 	}
 
-	req.SetBasicAuth(i.Token, "")
+	i.prepareRequest(req)
 
 	resp, err := i.Client.Do(req)
 	if err != nil {
@@ -167,6 +187,8 @@ func (i *IPInfo) LookupIP(ip net.IP) (*IPResponse, error) {
 		return nil, err
 	}
 
+	i.Cache.Set(fmt.Sprintf("IP-%s", ip.String()), &response, cache.DefaultExpiration)
+
 	return &response, nil
 }
 
@@ -187,4 +209,10 @@ func (i *IPInfo) GetCountry(code string) (string, error) {
 // decode decodes the json response from the server.
 func decode(data []byte, v interface{}) error {
 	return json.Unmarshal(data, v)
+}
+
+// prepareRequest prepares the request to be sent to IPInfo
+func (i *IPInfo) prepareRequest(req *http.Request) {
+	req.SetBasicAuth(i.Token, "")
+	req.Header.Set("user-agent", "IPInfoClient/IPInfo/GoLang/0.1")
 }
