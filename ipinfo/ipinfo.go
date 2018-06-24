@@ -215,5 +215,5 @@ func decode(data []byte, v interface{}) error {
 // prepareRequest prepares the request to be sent to IPInfo
 func (i *IPInfo) prepareRequest(req *http.Request) {
 	req.SetBasicAuth(i.Token, "")
-	req.Header.Set("user-agent", "IPInfoClient/IPInfo/GoLang/0.1")
+	req.Header.Set("user-agent", "IPInfoClient/GoLang/0.1")
 }
