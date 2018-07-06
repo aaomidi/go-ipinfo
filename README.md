@@ -14,7 +14,7 @@ An unofficial GoLang wrapper around IPInfo.
 ## Installing it
 
 ````bash
-go get github.com/aaomidi/go-ipinfo
+go get github.com/aaomidi/go-ipinfo/...
 ````
 
 ## Using it
