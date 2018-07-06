@@ -14,9 +14,5 @@ func IsBot(r *http.Request) bool {
 
 	ua := r.Header.Get("user-agent")
 
-	if rx.FindString(ua) == "" {
-		return false
-	}
-
-	return true
+	return rx.MatchString(ua)
 }
