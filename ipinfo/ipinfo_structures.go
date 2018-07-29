@@ -13,13 +13,13 @@ type IPResponse struct {
 	Postal   string  `json:"postal"`
 	Org      string  `json:"org"`
 	Phone    string  `json:"phone"`
-	ASN      Asn     `json:"asn"`
+	ASN      ASN     `json:"asn"`
 	Company  Company `json:"company"`
 	Carrier  Carrier `json:"carrier"`
 }
 
-// Asn is the ASN structure.
-type Asn struct {
+// ASN is the ASN structure.
+type ASN struct {
 	ASN    string `json:"asn"`
 	Name   string `json:"name"`
 	Domain string `json:"domain"`
@@ -43,13 +43,13 @@ type Carrier struct {
 
 // ASNResponse is the full response of the ASN API call.
 type ASNResponse struct {
-	Asn       string    `json:"asn"`
+	ASN       string    `json:"asn"`
 	Name      string    `json:"name"`
 	Country   string    `json:"country"`
 	Allocated string    `json:"allocated"`
 	Registry  string    `json:"registry"`
 	Domain    string    `json:"domain"`
-	NumIps    int       `json:"num_ips"`
+	NumIPs    int       `json:"num_ips"`
 	Prefixes  []Prefix  `json:"prefixes"`
 	Prefixes6 []Prefix6 `json:"prefixes6"`
 }
